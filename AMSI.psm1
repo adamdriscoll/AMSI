@@ -4,6 +4,12 @@ $NativeMethodCode = Join-Path $PSScriptRoot 'NativeMethods.cs'
 Add-Type (Get-Content $NativeMethodCode -Raw)
 
 function Initialize-Amsi {
+	<#
+		.SYNOPSIS 
+			Initializes the Antimalware Scan Interface API for this process. 
+		.PARAMETER appName
+			The name, version, or GUID string of the app calling the AMSI API.
+	#>
 	param(
 		[Parameter(Mandatory)]
 		[string]
@@ -18,11 +24,19 @@ function Initialize-Amsi {
 }
 
 function Unitialize-Amsi {
+	<#
+		.SYNOPSIS
+			Remove the instance of the AMSI API that was originally opened by Initialize-Amsi.
+	#>
 	[Amsi.NativeMethods]::AmsiUninitialize($Script:AmsiContext)
 	$Script:AmsiContext = [IntPtr]::Zero
 }
 
 function New-AmsiSession {
+	<#
+		.SYNOPSIS
+			Opens a session within which multiple scan requests can be correlated.
+	#>
 	$Session = [IntPtr]::Zero
 	$ret = [Amsi.NativeMethods]::AmsiOpenSession($Script:AmsiContext, [ref]$Session)
 	if ($ret -ne 0)
@@ -36,6 +50,10 @@ function New-AmsiSession {
 }
 
 function Remove-AmsiSession {
+	<#
+		.SYNOPSIS
+			Close a session that was opened by New-AmsiSession.
+	#>
 	param(
 		[Parameter(Mandatory)]$Session
 	)
@@ -44,6 +62,16 @@ function Remove-AmsiSession {
 }
 
 function Test-AmsiString {
+	<#
+		.SYNOPSIS
+			Scans a string for malware.
+		.PARAMETER string
+			The string to scan for malware.
+		.PARAMETER contentName
+			The filename, URL, unique script ID, or similar of the content being scanned.
+		.PARAMETER session
+			If multiple scan requests are to be correlated within a session, set session to the value returned by New-AmsiSession.
+	#>
 	param(
 		[Parameter(Mandatory)]
 		[string]$string,
