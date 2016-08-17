@@ -1,9 +1,11 @@
-if ($ENV:AppVEYOR -ne 'true')
+if ($ENV:AppVEYOR -eq 'true')
 {
-	$ENV:APPVEYOR_BUILD_VERSION = '99.99'
-	. (Join-Path $PSScriptRoot 'CreateModuleManifest.ps1')
+	Write-Warning "Unable to run these tests on AppVeyor since these tests require Windows 10 or Windows Server 2016."
+	return
 }
 
+$ENV:APPVEYOR_BUILD_VERSION = '99.99'
+. (Join-Path $PSScriptRoot 'CreateModuleManifest.ps1')
 $ModulePath = Join-Path $PSScriptRoot 'AMSI.psd1' 
 Import-Module $ModulePath -Force 
 
