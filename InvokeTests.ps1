@@ -23,7 +23,7 @@ else
     Write-Verbose -Verbose "Skipping installation of PSScriptAnalyzer since it requires PSVersion 5.0 or greater. Used PSVersion: $($PSVersion)"
 }
 
-$res = Invoke-Pester -Path ".\Tests" -OutputFormat NUnitXml -OutputFile TestsResults.xml -PassThru 
+$res = Invoke-Pester -Path ".\" -OutputFormat NUnitXml -OutputFile TestsResults.xml -PassThru 
 (New-Object "System.Net.WebClient").UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestsResults.xml))
 if ($res.FailedCount -gt 0) { 
 	throw "$($res.FailedCount) unit tests failed."

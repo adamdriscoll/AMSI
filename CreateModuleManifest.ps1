@@ -14,7 +14,7 @@ $NewModuleManifestParams = @{
 	RootModule = 'AMSI.psm1'
 	FunctionsToExport = $FunctionsToExport
 	ProjectUri = 'https://github.com/adamdriscoll/amsi'
-	Tags = @('AMSI', 'Antimalware Scan Interface')
+	Tags = @('AMSI', 'AntimalwareScanInterface')
 }
 
 New-ModuleManifest @NewModuleManifestParams
