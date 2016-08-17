@@ -28,6 +28,8 @@ namespace AMSI
         public static extern int AmsiScanString(IntPtr amsiContext, string inString, string contentName, IntPtr session, out AMSI_RESULT result);
         [DllImport("Amsi.dll", CharSet = CharSet.Unicode)]
         public static extern int AmsiScanBuffer(IntPtr amsiContext, byte[] buffer, ulong length, string contentName, IntPtr session, out AMSI_RESULT result);
+        
+        //This method apparently exists on MSDN but not in AMSI.dll (version 4.9.10586.0)
         [DllImport("Amsi.dll", CharSet = CharSet.Unicode)]
         public static extern bool AmsiResultIsMalware(AMSI_RESULT result);
     } 
